@@ -3064,3 +3064,32 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
    
   }
 }
+
+/* ✅ Close Sidebar Button - clean and fixed position */
+.close-sidebar-btn {
+  position: fixed;           /* viewport ke respect me position */
+  top: -4px;                 /* thoda niche */
+  right: 8px;               /* screen ke right corner me */
+  background: transparent;   /* no background */
+  border: none;              /* no border */
+  outline: none;             /* no focus outline */
+  font-size: 26px;           /* thoda bada icon */
+  cursor: pointer;
+  color: #333;               /* icon color */
+  z-index: 1101;             /* overlay aur sidebar ke upar */
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover effect (optional) */
+.close-sidebar-btn:hover {
+  color: #007bff;            /* blue hover */
+  transform: scale(1.2);
+}
+
+/* Show only on smaller screens */
+@media (min-width: 1441px) {
+  .close-sidebar-btn {
+    display: none;
+  }
+}
+
