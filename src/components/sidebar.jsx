@@ -6,9 +6,16 @@ import Employee from './Navigation/Employee';
 
 const SideBar = () => {
   const { user } = useSelector(state => state.authSlice);
+   // ✅ Sidebar close on overlay click
+  const closeSidebar = () => {
+    document.body.classList.remove("sidebar-open");
+  };
 
   return (
-    <div className="main-sidebar custom-sidebar">
+    <>
+       {/* ✅ Overlay background */}
+      <div className="sidebar-overlay" onClick={closeSidebar}></div>
+         <div className="main-sidebar custom-sidebar">
       <aside id="sidebar-wrapper">
         <div className="sidebar-brand">
           <NavLink to="/home">Target Management</NavLink>
@@ -37,6 +44,8 @@ const SideBar = () => {
         </div>
       </aside>
     </div>
+    </>
+ 
   );
 };
 
