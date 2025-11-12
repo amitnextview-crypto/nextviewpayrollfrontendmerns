@@ -18,6 +18,12 @@ const SideBar = () => {
          <div className="main-sidebar custom-sidebar">
       <aside id="sidebar-wrapper">
         <div className="sidebar-brand">
+            <button
+  className="close-sidebar-btn"
+  onClick={() => document.body.classList.remove("sidebar-open")}
+>
+  <i className="fas fa-times"></i>
+</button>
           <NavLink to="/home">Target Management</NavLink>
         </div>
         <div className="sidebar-brand sidebar-brand-sm">
