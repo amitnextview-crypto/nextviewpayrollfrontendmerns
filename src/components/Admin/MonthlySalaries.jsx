@@ -3,17 +3,31 @@ import { useEffect, useState } from "react";
 import HeaderSection from "../../components/HeaderSection";
 import Loading from "../Loading";
 import api from "../../http";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const MonthlySalaries = () => {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const fetchSalaries = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/admin/calculate-current-month-salaries");
-      if (res.success) setRows(res.data || []);
-      else toast.error(res.data?.message || "Failed to fetch salaries");
+
+      const month = selectedDate.getMonth() + 1;
+      const year = selectedDate.getFullYear();
+
+      const res = await api.get("/admin/calculate-current-month-salaries", {
+        params: { month, year },
+      });
+
+      if (res.success) {
+        setRows(res.data || []);
+      } else {
+        toast.error(res.message || "Failed to fetch salaries");
+      }
     } catch (err) {
       console.error("Error fetching salaries:", err);
       toast.error("Error fetching salaries");
@@ -24,17 +38,29 @@ const MonthlySalaries = () => {
 
   useEffect(() => {
     fetchSalaries();
-  }, []);
+  }, [selectedDate]);
 
   if (loading) return <Loading />;
 
   return (
     <>
-      <HeaderSection title="Current Month Salaries" />
-      <div className="container  my-4 border border-black">
-        <section className=" card p-3">
+      <HeaderSection title="Monthly Salaries" />
+
+      <div className="container my-4 border border-black">
+        <section className="card p-3">
+
           <div className="d-flex justify-content-between align-items-center mb-3 w-100">
-            <h5>Current Month Salary Report</h5>
+            <div>
+              <label className="fw-bold me-2">Select Month/Year:</label>
+              <DatePicker
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                dateFormat="MMMM yyyy"
+                showMonthYearPicker
+                className="form-control"
+              />
+            </div>
+
             <button className="btn btn-sm btn-outline-primary" onClick={fetchSalaries}>
               Refresh
             </button>
@@ -42,51 +68,51 @@ const MonthlySalaries = () => {
 
           <div className="table-responsive">
             <table className="table table-bordered table-striped">
-          <thead>
-  <tr>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Month/Year</th>
-    <th>Gross (₹)</th>
-    <th>PF (₹)</th>
-    <th>ESI (₹)</th>
-    <th>TDS (₹)</th>
-    <th>Other Deductions (₹)</th>
-    <th>Monthly Net Pay (₹)</th>
-     <th>Per Day Salary (₹)</th>
-       <th>Total Present Days</th> {/* ✅ New Column */}
-    <th>Till Date Salary (₹)</th>
-    <th>Approved Expense (₹)</th>
-    <th>Total Pay (₹)</th>
-  </tr>
-</thead>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Month/Year</th>
+                  <th>Gross (₹)</th>
+                  <th>PF (₹)</th>
+                  <th>ESI (₹)</th>
+                  <th>TDS (₹)</th>
+                  <th>Other Deductions (₹)</th>
+                  <th>Monthly Net Pay (₹)</th>
+                  <th>Per Day Salary (₹)</th>
+                  <th>Total Present Days</th>
+                  <th>Till Date Salary (₹)</th>
+                  <th>Approved Expense (₹)</th>
+                  <th>Total Pay (₹)</th>
+                </tr>
+              </thead>
 
-<tbody>
-  {rows.length > 0 ? (
-    rows.map((r, i) => (
-      <tr key={i}>
-        <td>{r.name}</td>
-        <td>{r.email}</td>
-        <td>{`${r.month}/${r.year}`}</td>
-        <td>{r.earnings?.gross?.toFixed(2) || "0.00"}</td>
-        <td>{r.deductions?.pfEmployee?.toFixed(2) || "0.00"}</td>
-        <td>{r.deductions?.esiEmployee?.toFixed(2) || "0.00"}</td>
-        <td>{r.deductions?.tdsMonthly?.toFixed(2) || "0.00"}</td>
-        <td>{r.deductions?.professionalTax?.toFixed(2) || "0.00"}</td>
-        <td className="fw-bold text-primary">{r.netPay?.toFixed(2) || "0.00"}</td>
-         <td>{r.perDaySalary?.toFixed(2) || "0.00"}</td>
-         <td className="fw-bold text-info">{r.presentDays || 0}</td> {/* ✅ Show Present Days */}
-        <td className="fw-bold text-warning">{r.tillDateSalary?.toFixed(2) || "0.00"}</td>
-        <td>{r.totalExpenses?.toFixed(2) || "0.00"}</td>
-        <td className="fw-bold text-success">{r.totalPay?.toFixed(2) || "0.00"}</td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="13" className="text-center">No records found</td>
-    </tr>
-  )}
-</tbody>
+              <tbody>
+                {rows.length > 0 ? (
+                  rows.map((r, i) => (
+                    <tr key={i}>
+                      <td>{r.name}</td>
+                      <td>{r.email}</td>
+                      <td>{`${r.month}/${r.year}`}</td>
+                      <td>{r.earnings?.gross?.toFixed(2) || "0.00"}</td>
+                      <td>{r.deductions?.pfEmployee?.toFixed(2) || "0.00"}</td>
+                      <td>{r.deductions?.esiEmployee?.toFixed(2) || "0.00"}</td>
+                      <td>{r.deductions?.tdsMonthly?.toFixed(2) || "0.00"}</td>
+                      <td>{r.deductions?.professionalTax?.toFixed(2) || "0.00"}</td>
+                      <td className="fw-bold text-primary">{r.netPay?.toFixed(2) || "0.00"}</td>
+                      <td>{r.perDaySalary?.toFixed(2) || "0.00"}</td>
+                      <td className="fw-bold text-info">{r.presentDays || 0}</td>
+                      <td className="fw-bold text-warning">{r.tillDateSalary?.toFixed(2) || "0.00"}</td>
+                      <td>{r.totalExpenses?.toFixed(2) || "0.00"}</td>
+                      <td className="fw-bold text-success">{r.totalPay?.toFixed(2) || "0.00"}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="14" className="text-center">No records found</td>
+                  </tr>
+                )}
+              </tbody>
 
             </table>
           </div>
@@ -97,3 +123,103 @@ const MonthlySalaries = () => {
 };
 
 export default MonthlySalaries;
+
+// import { toast } from "react-toastify";
+// import { useEffect, useState } from "react";
+// import HeaderSection from "../../components/HeaderSection";
+// import Loading from "../Loading";
+// import api from "../../http";
+
+// const MonthlySalaries = () => {
+//   const [rows, setRows] = useState([]);
+//   const [loading, setLoading] = useState(true);
+
+//   const fetchSalaries = async () => {
+//     try {
+//       setLoading(true);
+//       const res = await api.get("/admin/calculate-current-month-salaries");
+//       if (res.success) setRows(res.data || []);
+//       else toast.error(res.data?.message || "Failed to fetch salaries");
+//     } catch (err) {
+//       console.error("Error fetching salaries:", err);
+//       toast.error("Error fetching salaries");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchSalaries();
+//   }, []);
+
+//   if (loading) return <Loading />;
+
+//   return (
+//     <>
+//       <HeaderSection title="Current Month Salaries" />
+//       <div className="container  my-4 border border-black">
+//         <section className=" card p-3">
+//           <div className="d-flex justify-content-between align-items-center mb-3 w-100">
+//             <h5>Current Month Salary Report</h5>
+//             <button className="btn btn-sm btn-outline-primary" onClick={fetchSalaries}>
+//               Refresh
+//             </button>
+//           </div>
+
+//           <div className="table-responsive">
+//             <table className="table table-bordered table-striped">
+//           <thead>
+//   <tr>
+//     <th>Name</th>
+//     <th>Email</th>
+//     <th>Month/Year</th>
+//     <th>Gross (₹)</th>
+//     <th>PF (₹)</th>
+//     <th>ESI (₹)</th>
+//     <th>TDS (₹)</th>
+//     <th>Other Deductions (₹)</th>
+//     <th>Monthly Net Pay (₹)</th>
+//      <th>Per Day Salary (₹)</th>
+//        <th>Total Present Days</th> {/* ✅ New Column */}
+//     <th>Till Date Salary (₹)</th>
+//     <th>Approved Expense (₹)</th>
+//     <th>Total Pay (₹)</th>
+//   </tr>
+// </thead>
+
+// <tbody>
+//   {rows.length > 0 ? (
+//     rows.map((r, i) => (
+//       <tr key={i}>
+//         <td>{r.name}</td>
+//         <td>{r.email}</td>
+//         <td>{`${r.month}/${r.year}`}</td>
+//         <td>{r.earnings?.gross?.toFixed(2) || "0.00"}</td>
+//         <td>{r.deductions?.pfEmployee?.toFixed(2) || "0.00"}</td>
+//         <td>{r.deductions?.esiEmployee?.toFixed(2) || "0.00"}</td>
+//         <td>{r.deductions?.tdsMonthly?.toFixed(2) || "0.00"}</td>
+//         <td>{r.deductions?.professionalTax?.toFixed(2) || "0.00"}</td>
+//         <td className="fw-bold text-primary">{r.netPay?.toFixed(2) || "0.00"}</td>
+//          <td>{r.perDaySalary?.toFixed(2) || "0.00"}</td>
+//          <td className="fw-bold text-info">{r.presentDays || 0}</td> {/* ✅ Show Present Days */}
+//         <td className="fw-bold text-warning">{r.tillDateSalary?.toFixed(2) || "0.00"}</td>
+//         <td>{r.totalExpenses?.toFixed(2) || "0.00"}</td>
+//         <td className="fw-bold text-success">{r.totalPay?.toFixed(2) || "0.00"}</td>
+//       </tr>
+//     ))
+//   ) : (
+//     <tr>
+//       <td colSpan="13" className="text-center">No records found</td>
+//     </tr>
+//   )}
+// </tbody>
+
+//             </table>
+//           </div>
+//         </section>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default MonthlySalaries;
