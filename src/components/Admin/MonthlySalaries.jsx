@@ -3,8 +3,12 @@ import { useEffect, useState } from "react";
 import HeaderSection from "../../components/HeaderSection";
 import Loading from "../Loading";
 import api from "../../http";
+import { useHistory } from "react-router-dom";
+
+
 
 const MonthlySalaries = () => {
+   const history = useHistory();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +35,7 @@ const MonthlySalaries = () => {
   return (
     <>
       <HeaderSection title="Current Month Salaries" />
-      <div className="container  my-4 border border-black">
+      <div className="main-content  my-4 ">
         <section className=" card p-3">
           <div className="d-flex justify-content-between align-items-center mb-3 w-100">
             <h5>Current Month Salary Report</h5>
@@ -39,7 +43,6 @@ const MonthlySalaries = () => {
               Refresh
             </button>
           </div>
-
           <div className="table-responsive">
             <table className="table table-bordered table-striped">
           <thead>
@@ -58,29 +61,51 @@ const MonthlySalaries = () => {
     <th>Till Date Salary (₹)</th>
     <th>Approved Expense (₹)</th>
     <th>Total Pay (₹)</th>
+    <th>Payslip</th>
+
   </tr>
 </thead>
 
 <tbody>
   {rows.length > 0 ? (
-    rows.map((r, i) => (
-      <tr key={i}>
-        <td>{r.name}</td>
-        <td>{r.email}</td>
-        <td>{`${r.month}/${r.year}`}</td>
-        <td>{r.earnings?.gross?.toFixed(2) || "0.00"}</td>
-        <td>{r.deductions?.pfEmployee?.toFixed(2) || "0.00"}</td>
-        <td>{r.deductions?.esiEmployee?.toFixed(2) || "0.00"}</td>
-        <td>{r.deductions?.tdsMonthly?.toFixed(2) || "0.00"}</td>
-        <td>{r.deductions?.professionalTax?.toFixed(2) || "0.00"}</td>
-        <td className="fw-bold text-primary">{r.netPay?.toFixed(2) || "0.00"}</td>
-         <td>{r.perDaySalary?.toFixed(2) || "0.00"}</td>
-         <td className="fw-bold text-info">{r.presentDays || 0}</td> {/* ✅ Show Present Days */}
-        <td className="fw-bold text-warning">{r.tillDateSalary?.toFixed(2) || "0.00"}</td>
-        <td>{r.totalExpenses?.toFixed(2) || "0.00"}</td>
-        <td className="fw-bold text-success">{r.totalPay?.toFixed(2) || "0.00"}</td>
-      </tr>
-    ))
+    rows.map((r, i) => {
+
+      console.log("ROW DATA:", r);  // 👈 यही सबसे important है
+
+      return (
+        <tr key={i}>
+          <td>{r.name}</td>
+          <td>{r.email}</td>
+          <td>{`${r.month}/${r.year}`}</td>
+          <td>{r.earnings?.gross?.toFixed(2) || "0.00"}</td>
+          <td>{r.deductions?.pfEmployee?.toFixed(2) || "0.00"}</td>
+          <td>{r.deductions?.esiEmployee?.toFixed(2) || "0.00"}</td>
+          <td>{r.deductions?.tdsMonthly?.toFixed(2) || "0.00"}</td>
+          <td>{r.deductions?.professionalTax?.toFixed(2) || "0.00"}</td>
+          <td className="fw-bold text-primary">{r.netPay?.toFixed(2) || "0.00"}</td>
+          <td>{r.perDaySalary?.toFixed(2) || "0.00"}</td>
+          <td className="fw-bold text-info">{r.presentDays || 0}</td>
+          <td className="fw-bold text-warning">{r.tillDateSalary?.toFixed(2) || "0.00"}</td>
+          <td>{r.totalExpenses?.toFixed(2) || "0.00"}</td>
+          <td className="fw-bold text-success">{r.totalPay?.toFixed(2) || "0.00"}</td>
+
+          <td>
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={() =>
+                history.push({
+                  pathname: `/payslip/${r.employeeID}/${r.month}/${r.year}`, // 👈 यह बाद में सही करेंगे
+                  state: { payslipData: r }
+                })
+              }
+            >
+              Payslip
+            </button>
+          </td>
+
+        </tr>
+      );
+    })
   ) : (
     <tr>
       <td colSpan="13" className="text-center">No records found</td>
@@ -91,6 +116,7 @@ const MonthlySalaries = () => {
             </table>
           </div>
         </section>
+        
       </div>
     </>
   );
