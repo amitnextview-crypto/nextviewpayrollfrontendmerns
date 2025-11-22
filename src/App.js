@@ -49,6 +49,10 @@ import PayrollPolicies from './components/Admin/PayrollPolicies';
 import ExpenseForm from './components/Employees/ExpenseForm';
 import ExpenseView from './components/Admin/ExpenseView';
 import Expense from './components/Admin/Expense';
+import About from "./components/Admin/About";
+import Contact from "./components/Admin/Contact";
+import Payslip from "./components/Admin/Payslip";
+
 
 
 
@@ -168,6 +172,15 @@ const App = () =>
      <AdminRoute exact path='/payrollpolicies'>
   <PayrollPolicies />
 </AdminRoute>
+ <AdminRoute exact path='/about'>
+  <About />
+</AdminRoute>
+<AdminRoute exact path='/contact'>
+  <Contact />
+</AdminRoute>
+<AdminRoute exact path="/payslip/:id/:month/:year">
+  <Payslip />
+</AdminRoute>
     </Switch>
   )
 }
@@ -285,30 +298,28 @@ const LeaderRoute = ({children,...rest}) =>
   );
 }
 
-const EmployeeRoute = ({ children, ...rest }) => {
-  const { user } = useSelector((state) => state.authSlice);
+const EmployeeRoute = ({children,...rest}) =>
+{
+  const {user} = useSelector((state)=>state.authSlice);
   return (
-    <Route
-      {...rest}
-      render={({ location }) => {
-        return (user && (user.type === 'Employee' || user.type === 'Leader')) ? (
-          <>
-            <SideBar />
-            <Navigation />
-            {children}
-          </>
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/',
-              state: { from: location }
-            }}
-          />
-        );
-      }}
-    />
+    <Route {...rest} render={({location})=>{
+      return user && user.type==='Employee' || user.type==='Leader' ? (
+        <>
+          <SideBar/>
+          <Navigation/>
+          {children}
+        </>) : (
+        <Redirect
+          to={{
+            pathname:'/',
+            state:{
+              from:location
+            }
+          }}
+        />
+      );
+    }} />
   );
-};
-
+}
 
 export default App;
