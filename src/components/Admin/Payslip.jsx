@@ -18,20 +18,18 @@ const Payslip = () => {
 
 const sendPayslipEmail = async () => {
   try {
-    const response = await fetch(
-      `https://nextviewpayrollbackendmern.onrender.com/api/payslip/send-email`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          employeeID: e.employeeID,
-          month,
-          year,
-        }),
-      }
-    );
+    const response = await fetch("https://nextviewpayrollbackendmern.onrender.com/api/payslip/send-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        employeeID: e.employeeID,
+        month,
+        year,
+      }),
+    });
+
     const data = await response.json();
     alert(data.message);
   } catch (err) {
@@ -39,7 +37,6 @@ const sendPayslipEmail = async () => {
     alert("Error sending payslip email");
   }
 };
-
 
   return (
     <div className="main-content">
