@@ -18,7 +18,7 @@ const Payslip = () => {
 
 const sendPayslipEmail = async () => {
   try {
-    const response = await fetch("https://nextviewpayrollbackendmern.onrender.com/api/payslip/send-email", {
+    const response = await fetch("https://nextviewpayrollbackendmern.onrender.com/api/admin/payslip/send-email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
