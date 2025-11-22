@@ -1,6 +1,9 @@
-import { sendPayslipEmailAPI } from '../../http'; // adjust path if needed
+import React from "react";
+import { useParams, useLocation } from "react-router-dom";
 import HeaderSection from "../../components/HeaderSection";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import api from "../../http"; // your axios instance
+
 
 const Payslip = () => {
   const { state } = useLocation();
