@@ -16,22 +16,22 @@ const Payslip = () => {
 
   const e = payslip; // shortcut
 
-  const sendPayslipEmail = async () => {
+const sendPayslipEmail = async () => {
   try {
     const response = await fetch(
-  `https://nextviewpayrollbackendmern.onrender.com/api/payslip/send-email`,
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      employeeID: e.employeeID,
-      month,
-      year,
-    }),
-  }
-);
+      `https://nextviewpayrollbackendmern.onrender.com/api/payslip/send-email`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          employeeID: e.employeeID,
+          month,
+          year,
+        }),
+      }
+    );
     const data = await response.json();
     alert(data.message);
   } catch (err) {
