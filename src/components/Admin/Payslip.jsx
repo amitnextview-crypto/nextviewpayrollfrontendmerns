@@ -15,20 +15,20 @@ const Payslip = () => {
 
   const e = payslip;
 
-  const sendPayslipEmail = async () => {
-    try {
-      const data = await api.post('/admin/payslip/send-email', {
-        employeeID: e._id || e.employeeID,
-        month,
-        year
-      });
+const sendPayslipEmail = async () => {
+  try {
+    const data = await api.post("/admin/payslip/send-email", {
+      employeeID: e.employeeID,
+      month,
+      year
+    });
+    toast.success(data.message);
+  } catch (err) {
+    console.error(err);
+    toast.error("Error sending payslip PDF");
+  }
+};
 
-      toast.success(data.message || "Payslip sent successfully!");
-    } catch (err) {
-      console.error("Error sending payslip email:", err);
-      toast.error(err?.message || "Error sending payslip email");
-    }
-  };
 
   return (
     <div className="main-content">
