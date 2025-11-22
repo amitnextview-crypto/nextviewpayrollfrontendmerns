@@ -16,6 +16,32 @@ const Payslip = () => {
 
   const e = payslip; // shortcut
 
+  const sendPayslipEmail = async () => {
+  try {
+    const response = await fetch(
+      `https://your-backend-url.com/api/payslip/send-email`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          employeeID: e.employeeID,
+          month,
+          year,
+        }),
+      }
+    );
+
+    const data = await response.json();
+    alert(data.message);
+  } catch (err) {
+    console.error(err);
+    alert("Error sending payslip email");
+  }
+};
+
+
   return (
     <div className="main-content">
         <section className="section">
@@ -91,9 +117,17 @@ const Payslip = () => {
           </tbody>
         </table>
 
-        <h4 className="text-success">
-          Net Pay: ₹{e.totalPay?.toFixed(2)}
-        </h4>
+        <div className="d-flex justify-content-between align-items-center mt-4">
+
+  <h4 className="text-success mb-0">
+    Net Pay: ₹{e.totalPay?.toFixed(2)}
+  </h4>
+
+  <button className="btn btn-primary" onClick={sendPayslipEmail}>
+    Send Payslip to Email
+  </button>
+
+</div>
       </div>
         </section>
 
