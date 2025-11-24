@@ -40,16 +40,15 @@ const sendPayslipEmail = async () => {
     `;
 
     const { data } = await api.post("/admin/payslip/send-email", {
-      employeeID: e.employeeID,
-      month,
-      year,
+      email: e.email,  // 👈 IMPORTANT
+      subject: `Payslip for ${month}/${year}`, // 👈 IMPORTANT
       html: htmlContent
     });
 
     toast.success(data.message);
   } catch (err) {
-     console.log("PAYSLIP PDF ERROR --->", error); 
-    toast.error(err?.response?.data?.message || "Server Error")
+    console.log("PAYSLIP EMAIL ERROR --->", err);
+    toast.error(err?.response?.data?.message || "Server Error");
   }
 };
 
