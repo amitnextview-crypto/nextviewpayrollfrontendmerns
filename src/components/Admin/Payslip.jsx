@@ -48,7 +48,7 @@ const sendPayslipEmail = async () => {
 
     toast.success(data.message);
   } catch (err) {
-    console.error(err);
+     console.log("PAYSLIP PDF ERROR --->", error); 
     toast.error(err?.response?.data?.message || "Server Error")
   }
 };
