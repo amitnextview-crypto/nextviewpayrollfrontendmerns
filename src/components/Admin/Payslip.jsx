@@ -22,17 +22,19 @@ const Payslip = () => {
   const e = payslip; // shortcut
 
 const sendPayslipEmail = async () => {
-  try {
-    const data = await api.post("/admin/payslip/send-email", {
-      employeeID: e.employeeID,
-      month,
-      year
-    });
-    toast.success(data.message);
-  } catch (err) {
-    console.error(err);
-    toast.error("Error sending payslip PDF");
-  }
+ try {
+  const res = await api.post("/admin/payslip/send-email", {
+    employeeID: payslip.employeeID,
+    month,
+    year
+  });
+
+  toast.success(res.data?.message || "Email sent!");
+  
+} catch (err) {
+  console.log(err);
+  toast.error(err.response?.data?.message || "Error sending payslip");
+}
 };
 
 
