@@ -62,6 +62,7 @@ export const updateEmployeeExpense = (id, data) =>api.patch(`/admin/expenses/${i
 
 export const calculateCurrentMonthSalaries = () =>
   api.get("/admin/calculate-current-month-salaries");
+export const sendPayslip = (data) => api.post('/admin/payslip/send-email', data);
 
 
 
