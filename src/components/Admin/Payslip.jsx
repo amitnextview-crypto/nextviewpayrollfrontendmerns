@@ -23,7 +23,21 @@ const Payslip = () => {
 
 const sendPayslipEmail = async () => {
   try {
-    const htmlContent = document.getElementById("payslip-container").innerHTML;
+    const htmlContent = `
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial; padding: 20px; }
+          table { width: 100%; border-collapse: collapse; }
+          table, td, th { border: 1px solid #000; }
+          td, th { padding: 8px; }
+        </style>
+      </head>
+      <body>
+        ${document.getElementById("payslip-container").innerHTML}
+      </body>
+      </html>
+    `;
 
     const { data } = await api.post("/admin/payslip/send-email", {
       employeeID: e.employeeID,
