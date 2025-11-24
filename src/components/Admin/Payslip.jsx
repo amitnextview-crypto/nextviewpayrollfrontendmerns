@@ -49,7 +49,7 @@ const sendPayslipEmail = async () => {
     toast.success(data.message);
   } catch (err) {
     console.error(err);
-    toast.error("Error sending payslip PDF");
+    toast.error(err?.response?.data?.message || "Server Error")
   }
 };
 
