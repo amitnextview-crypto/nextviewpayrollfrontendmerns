@@ -22,24 +22,27 @@ const Payslip = () => {
   const e = payslip; // shortcut
 
 const sendPayslipEmail = async () => {
- try {
-  const res = await api.post("/admin/payslip/send-email", {
-    employeeID: payslip.employeeID,
-    month,
-    year
-  });
+  try {
+    const htmlContent = document.getElementById("payslip-container").innerHTML;
 
-  toast.success(res.data?.message || "Email sent!");
-  
-} catch (err) {
-  console.log(err);
-  toast.error(err.response?.data?.message || "Error sending payslip");
-}
+    const { data } = await api.post("/admin/payslip/send-email", {
+      employeeID: e.employeeID,
+      month,
+      year,
+      html: htmlContent
+    });
+
+    toast.success(data.message);
+  } catch (err) {
+    console.error(err);
+    toast.error("Error sending payslip PDF");
+  }
 };
 
 
   return (
-    <div className="main-content">
+    <div id="payslip-container">
+  <div className="main-content">
         <section className="section">
                <div className="card">
               <div className="card-header d-flex justify-content-between">
@@ -128,6 +131,8 @@ const sendPayslipEmail = async () => {
         </section>
 
     </div>
+    </div>
+  
   );
 };
 
